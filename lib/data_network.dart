@@ -12,7 +12,7 @@ class DataApi {
     if (response.statusCode == 200) {
       var postjsonData = response.body;
 
-      print(postjsonData);
+      // print(postjsonData);
       return userDataModelFromJson(postjsonData);
     }
   }

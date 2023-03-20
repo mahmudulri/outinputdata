@@ -24,14 +24,14 @@ class UserDataModel {
   String country;
   String ipaddress;
   DateTime date;
-  int ipno;
+  String ipno;
 
   factory UserDataModel.fromJson(Map<String, dynamic> json) => UserDataModel(
         vpnname: json["vpnname"],
         country: json["country"],
-        ipaddress: json["ipaddress"],
+        ipaddress: json["ipaddress"].toString(),
         date: DateTime.parse(json["date"]),
-        ipno: json["ipno"],
+        ipno: json["ipno"].toString(),
       );
 
   Map<String, dynamic> toJson() => {

@@ -31,6 +31,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     // print(DateFormat.yMd().format(DateTime.now()));
+
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -146,7 +147,7 @@ class _HomepageState extends State<Homepage> {
                         SheetsColumn.country: countryController.text.trim(),
                         SheetsColumn.ipaddress: ipaddressController.text.trim(),
                         SheetsColumn.date:
-                            DateFormat.yMd().format(DateTime.now()).trim(),
+                            DateFormat.yMd().format(DateTime.now()).toString(),
                         SheetsColumn.number: numberController.text.trim(),
                       };
 
@@ -189,6 +190,9 @@ class _HomepageState extends State<Homepage> {
               } else {
                 return ListView.separated(
                   separatorBuilder: (context, index) {
+                    print(regularController.allmytips[index].date
+                        .toIso8601String()
+                        .toString());
                     return SizedBox(
                       height: 3,
                     );
