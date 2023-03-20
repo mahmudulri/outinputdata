@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ouripdata/senddata/googlesheet.dart';
 import 'package:ouripdata/senddata/sheetscolumn.dart';
 import 'package:intl/intl.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import 'datacontroller.dart';
 
@@ -26,6 +27,11 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
+    _refreshNow();
+  }
+
+  Future<void> _refreshNow() async {
+    DataController regularController = Get.put(DataController());
   }
 
   @override
@@ -36,6 +42,16 @@ class _HomepageState extends State<Homepage> {
     var screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          "My Working IP List",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      backgroundColor: Colors.black,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -188,41 +204,53 @@ class _HomepageState extends State<Homepage> {
               if (regularController.isLoading.value) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                return ListView.separated(
-                  separatorBuilder: (context, index) {
-                    print(regularController.allmytips[index].date
-                        .toIso8601String()
-                        .toString());
-                    return SizedBox(
-                      height: 3,
-                    );
-                  },
-                  itemCount: regularController.allmytips.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: screenHeight * 0.130,
-                      width: screenWidth,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(regularController.allmytips[index].vpnname
-                              .toString()),
-                          Text(regularController.allmytips[index].country
-                              .toString()),
-                          Text(regularController.allmytips[index].ipaddress
-                              .toString()),
-                          Text(regularController.allmytips[index].date
-                              .toString()),
-                          Text(regularController.allmytips[index].ipno
-                              .toString()),
-                        ],
-                      ),
-                    );
-                  },
+                return LiquidPullToRefresh(
+                  onRefresh: _refreshNow,
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) {
+                      print(regularController.allmytips[index].date
+                          .toIso8601String()
+                          .toString());
+                      return SizedBox(
+                        height: 10,
+                      );
+                    },
+                    itemCount: regularController.allmytips.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: screenHeight * 0.150,
+                        width: screenWidth,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(regularController.allmytips[index].vpnname
+                                  .toString()),
+                              Text(regularController.allmytips[index].country
+                                  .toString()),
+                              Text(
+                                regularController.allmytips[index].ipaddress
+                                    .toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(DateFormat('dd MMM, yyyy').format(
+                                  regularController.allmytips[index].date
+                                      .toLocal())),
+                              Text(regularController.allmytips[index].ipno
+                                  .toString()),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 );
               }
             })),
